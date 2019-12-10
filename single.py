@@ -28,6 +28,16 @@ auth = auth.Gen3Auth(endpoint, refresh_file="credentials.json")
 
 submitter = Gen3Submission(endpoint, auth)
 
+bojec = {
+        "type": "program",
+        "dbgap_accession_number": '12345',
+        "name": '1235',
+        "release_name": 'wowowowo',
+        "summary_description": 'qwkejhe',
+        "dataset_url": 'google.com', 
+    }
+submitter.create_program(bojec)
+
 urltail = 'sampleSets'
 print( APIURL+urltail+"/1/samples?includes=subject.fullConsent")
 response = requests.get(APIURL+urltail+"/1/samples?includes=subject.fullConsent", headers=headers)
