@@ -79,7 +79,6 @@ for dataset in dataset_data:
     program_url = build_dataset_url( program_name )
     
     for version in dataset["datasetVersions"]:
-        print(version["active"])
         if version["active"] == 1:
 
             ## for now (12/10) the 'active version in dss doesnt have the harmonized phenos, so for the whole deal, gonna hardcode datasetVersion2
@@ -96,11 +95,11 @@ for dataset in dataset_data:
 
     ## create programs from dataset list
     print( "creating program node for " + dataset["accession"] )
-    print(program_obj)
+
     submitter.create_program(program_obj)
     ## get guid for program based on program_name, store as fetched_id to link subjects, filesets, core_metadata_collections
     query = '{program(name:\"%s\"){id}}' % program_name
-    print(query)
+
     fetched_program_id = submitter.query(query)["data"]["program"][0]["id"]
     # ## get all the filesets for a dataset, to be used later
 
@@ -252,8 +251,7 @@ for dataset in dataset_data:
     sample_set_data = response.json()["data"]
     
     sample_dict = {}
-    print('these are in sample set data')
-    print(sample_set_data)
+
     for sample_set in sample_set_data:    
 
         print('-----looping for one sample sets samples-----')
@@ -291,7 +289,7 @@ for dataset in dataset_data:
             continue
     
         print(str(len(sample_dict)) + " subjects currently in this dataset")
-    ## sample dict after this for loop will be all the samples for a dataset (some subjects have multi samples 4870 subj/4909 sample in dev server)
+    ## sample dict after this for loop will be all the samples for a dataset
     ## sample_set is set of unique subject_ids in the sample_dict
     
     ## get a list of consents for the dataset
@@ -334,7 +332,6 @@ for dataset in dataset_data:
             project_name = program_name+"_"+c
             query = '{project(name:\"%s\"){id}}' % project_name
             fetched_project_id = submitter.query(query)["data"]["project"][0]["id"]
-            print( fetched_project_id )
 
             cmc_obj = {
                 "*collection_type": "Consent-Level File Manifest", 
