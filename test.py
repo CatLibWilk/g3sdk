@@ -296,12 +296,27 @@ for dataset in dataset_data:
     dataset_consents = []
 
             ##tested versioning-compliant url = https://dev3.niagads.org/darm/api/datasetVersions/{id}/consents
-    response = requests.get(APIURL+"datasetVersions/"+str(dss_dataset_id)+"/consents", headers=headers)
-
+    request_url = APIURL+"datasetVersions/"+str(dss_dataset_id)+"/consents"
+    response = requests.get(request_url, headers=headers)
+    print('Checking for datasets consent levels')
+    last_page = response.json()["meta"]["last_page"]
     consent_data = response.json()["data"]
+    ## gets the data from first return regardless of need for paginated retrieval
     for consent in consent_data:
         dataset_consents.append(consent["key"])
 
+    if last_page > 1:
+        for page in range( last_page + 1 ):
+            if page < 2:
+                continue
+            else:
+                response = requests.get(request_url + "&page=" + str(page), headers=headers)
+                print('getting paginated data from ' + request_url + "&page=" + str(page))
+                consent_data = response.json()["data"]
+                for consent in consent_data:
+                    dataset_consents.append(consent["key"])
+
+    print(str(len(dataset_consents)) + " consent(s) where found for datasetVersion " + str( dss_dataset_id ) )
     ## create a set of unique subject ids for subjects whose consent matches the current consent-project being created
     for c in dataset_consents:
         project_sample_set = set({})
